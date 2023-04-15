@@ -17,5 +17,7 @@ FaruQ Video Manager runs in python with the help of the **moviepy** package. In 
 - python3 (*of course*)
 - moviepy : A library used to do differents modification on a video file
 
-You have to change the line 10 by changing the path with the absolute path of the icon.
+You have to **edit the line 10 of the python file** by changing the path with the absolute path of the icon.  
+But if you absolutly don't care about my beautiful icon you can remove it and remove the line 10 too.  
+
 You can also use `pip install -r requirements.txt` to install the necessary libraries.
