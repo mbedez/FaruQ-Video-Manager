@@ -3,7 +3,8 @@
 [Intro](#What-is-FaruQ-Video-Manager) - [Commands](#What-can-you-do-with-it) - [Setup](#What-do-you-need-in-order-to-set-FafBot-up)
 ***
 ## What is FaruQ Video Manager?
-FafBot is a small project I made for a someone to speed, split in two, or merge video(s).
+FaruQ Video Manager is a small project I made for a someone to speed, split in two, or merge video(s).
+This software is designed to run on Win10.
 ***
 ## What can you do with it?
 Here's a list of different things you could do with this soft:
