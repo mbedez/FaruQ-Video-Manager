@@ -14,7 +14,7 @@ Here's a list of different things you could do with this soft:
 ***
 ## What do you need in order to set FaruQ Video Manager up?
 FaruQ Video Manager runs in python with the help of the **moviepy** package. In order to run the soft, you will need a few things :
-- python3 (*of course*)
+- python (*of course*)
 - moviepy : A library used to do differents modification on a video file
 
 You have to **edit the line 10 of the python file** by changing the path with the absolute path of the icon.  
@@ -24,7 +24,7 @@ You can also use `pip install -r requirements.txt` to install the necessary libr
 ***
 ## How to run FaruQ Video Manager
 Simply run the python file or his shortcut with python or do from the terminal.  
-For example with the command `python3 FaruQVideoManager.py`
+For example with the command `python FaruQVideoManager.py`
 ***
 # Notes
 Even if the program **is not responding** it's actually running well in background, you can see what it's really doing in the console if you run it with an IDE or with python without the terminal.
