@@ -104,11 +104,7 @@ class window():
     output_video_name += f".{file_ext_list[0]}"
 
     runningPrompt = f"Merging {file_name_list[0]}.{file_ext_list[0]}"
-    print(len(mergelist))
-    print(mergelist)
-    print()
     for i in range(len(mergelist)-1):
-      print(i)
       runningPrompt += f" + {file_name_list[i+1]}.{file_ext_list[i+1]}"
     self.editText(f"{runningPrompt} ...")
 
@@ -128,8 +124,6 @@ class window():
     file_name = os.path.basename(file_path).split('/')[-1]
     file_name, file_ext = file_name.rsplit(".", 1)
 
-    print("File name :",file_name)
-    print("File extension :",file_ext)
     self.editText(f"Accelerating {file_name}.{file_ext} ...")
 
     # Generate the output file names
