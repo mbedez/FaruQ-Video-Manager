@@ -45,7 +45,7 @@ class window():
         return value
     pass
 
-  def select_file(self, choice, merge_file_path=None):
+  def select_file(self, choice):
     if choice == 1: # split  
       file_path = filedialog.askopenfilename()
       os.chdir(os.path.dirname(file_path))
@@ -63,6 +63,8 @@ class window():
           mergelist.append(file_path)
         self.merge_video(mergelist)
     elif choice == 3: # accelerate
+      file_path = filedialog.askopenfilename()
+      os.chdir(os.path.dirname(file_path))
       self.accelerate_video(file_path)
     else:
       print("Error")    
