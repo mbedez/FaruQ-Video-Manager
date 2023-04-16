@@ -76,7 +76,6 @@ class window():
 
     self.editText(f"Splitting {file_name}.{file_ext} ...")
 
-    # Use moviepy to split the video into two files at the halfway point
     clip = mp.VideoFileClip(file_path)
     duration = clip.duration
 
