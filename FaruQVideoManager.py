@@ -133,7 +133,7 @@ class window():
     factors = [16, 60, 120]
 
     for factor in factors:
-        output_video = f"{file_name}_x{factor}&Time.{file_ext}"
+        output_video = f"{file_name}_x{factor}.{file_ext}"
         output_videos.append(output_video)
 
     clip = mp.VideoFileClip(file_path)
