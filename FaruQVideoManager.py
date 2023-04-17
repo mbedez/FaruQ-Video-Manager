@@ -3,8 +3,22 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import simpledialog
 import os
+import sys
 
-iconPath = "icon.ico"
+# https://stackoverflow.com/questions/31836104/pyinstaller-and-onefile-how-to-include-an-image-in-the-exe-file
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS2
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
+
+iconPath = resource_path(".\\icon.ico")
 
 class window():
   def __init__(self):
@@ -116,6 +130,9 @@ class window():
 
     file_name = os.path.basename(file_path).split('/')[-1]
     file_name, file_ext = file_name.rsplit(".", 1)
+
+    runningPrompt = f"Splitting {file_name} in {len(timeList)-1} parts..."
+    self.editText(runningPrompt)
 
     clips = []
     for i in range(len(timeList)-1):
