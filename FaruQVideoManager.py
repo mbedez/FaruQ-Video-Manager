@@ -14,7 +14,7 @@ class window():
     # change the path bellow by your path of the icon file 
     self.root.iconbitmap(default=iconPath)
     self.root.resizable(width=False, height=False)
-    self.root.geometry("425x100")
+    self.root.geometry("375x100")
     button1 = tk.Button(text="Split a video", command=lambda: self.select_file(1))
     button1.grid(row=0, column=0, padx=10, pady=10)
 
@@ -43,14 +43,25 @@ class window():
       value = simpledialog.askinteger(title="", prompt=prompt,  initialvalue=2, minvalue=2, maxvalue=10)
       if value != None:
         return value
+    elif choice == 3:
+      value = simpledialog.askinteger(title="", prompt="Type 1 for regular split or type 2 for custom split!",  initialvalue=1, minvalue=1, maxvalue=2)
+      if value != None and value == 1:
+        return value
+      elif value != None and value == 2:
+        return simpledialog.askstring(title="", prompt="Give your timecode in seconds! (example : '60,120,121')")
+    elif choice == 4:
+      return simpledialog.askstring(title="", prompt="Give your factors! (example : '1.5,2,120')")
     pass
 
   def select_file(self, choice):
     if choice == 1: # split  
       file_path = filedialog.askopenfilename()
       os.chdir(os.path.dirname(file_path))
-      value = self.getValue(1)
-      if value != None : self.split_video(file_path, value)
+      value = self.getValue(3)
+      if value != None and value == 1: # regular split
+        value = self.getValue(1)
+        if value != None : self.regularSplit(file_path, value)
+      else: self.customSplit(file_path, value)# custom split
     elif choice == 2: # merge
       mergelist = []
       value = self.getValue(2)
@@ -65,28 +76,55 @@ class window():
     elif choice == 3: # accelerate
       file_path = filedialog.askopenfilename()
       os.chdir(os.path.dirname(file_path))
-      self.accelerate_video(file_path)
-    else:
-      print("Error")    
+      value = self.getValue(4)
+      if value != None : self.accelerate_video(file_path, value) 
 
-  def split_video(self, file_path, n):
+  def regularSplit(self, file_path, n):
+
+    clip = mp.VideoFileClip(file_path)
+    
+    timeList = []
+    for i in range(n):
+      timeList.append(i*clip.duration/n)
+    timeList.append(clip.duration)
+    self.split_video(file_path, timeList, clip)
+
+  def customSplit(self, file_path, timeString):
+
+    clip = mp.VideoFileClip(file_path)
+    
+    timeList = timeString.split(',')
+    for i in range(len(timeList)):
+      if timeList[i].replace('.',"1").isnumeric() == True:
+        if int(float(timeList[i])) <= 0 and int(float(timeList[i])) >= clip.duration:
+          clip = None
+        else:
+          for i in range(len(timeList)):
+            timeList[i] = int(float(timeList[i]))
+          timeList.insert(0, 0)
+          timeList.append(clip.duration)
+          if sorted(timeList) != timeList:
+            clip = None
+      else: clip = None
+    
+    if clip == None:
+      self.editText("Error!\nPlease select an option!")
+    else:
+      self.split_video(file_path, timeList, clip)
+
+  def split_video(self, file_path, timeList, clip):
 
     file_name = os.path.basename(file_path).split('/')[-1]
     file_name, file_ext = file_name.rsplit(".", 1)
 
-    self.editText(f"Splitting {file_name}.{file_ext} ...")
-
-    clip = mp.VideoFileClip(file_path)
-    duration = clip.duration
-
     clips = []
-    for i in range(n):
-      clips.append(clip.subclip(i*duration/n, (i+1)*duration/n))
+    for i in range(len(timeList)-1):
+      clips.append(clip.subclip(timeList[i], timeList[i+1]))
       
     for i, clip in enumerate(clips):
       clip.write_videofile(f"{file_name} - part{i+1}.{file_ext}")
 
-    self.editText(f"Done !\nPlease select an option")
+    self.editText(f"Done!\nPlease select an option!")
 
   def merge_video(self, mergelist):
       
@@ -117,9 +155,21 @@ class window():
     merged_clip = mp.concatenate_videoclips(clipList)
     merged_clip.write_videofile(output_video_name)
 
-    self.editText(f"Done !\nPlease select an option")
+    self.editText(f"Done!\nPlease select an option!")
 
-  def accelerate_video(self, file_path):
+  def parseFactors(self, factors):
+    factors = factors.split(',')
+    for i in range(len(factors)):
+      if factors[i].replace('.',"1").isnumeric() == True:
+        if float(factors[i]) <= 0 and float(factors[i]) > 200:
+          return None
+      else:
+        return None
+    for i in range(len(factors)):
+      factors[i] = float(factors[i])
+    return factors
+
+  def accelerate_video(self, file_path, factorsString):
 
     # Extract the file name and extension from the input video path
     file_name = os.path.basename(file_path).split('/')[-1]
@@ -127,9 +177,14 @@ class window():
 
     self.editText(f"Accelerating {file_name}.{file_ext} ...")
 
+    factors = self.parseFactors(factorsString)
+    if factors == None:
+      self.editText(f"Error!\nPlease select an option!")
+      return
+    print(factors)
+
     # Generate the output file names
     output_videos = []
-    factors = [16, 60, 120]
 
     for factor in factors:
         output_video = f"{file_name}_x{factor}.{file_ext}"
