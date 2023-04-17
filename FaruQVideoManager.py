@@ -181,7 +181,6 @@ class window():
     if factors == None:
       self.editText(f"Error!\nPlease select an option!")
       return
-    print(factors)
 
     # Generate the output file names
     output_videos = []
