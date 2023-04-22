@@ -108,19 +108,25 @@ class window():
     clip = mp.VideoFileClip(file_path)
     
     timeList = timeString.split(',')
+    nombresValides=True 
+
     for i in range(len(timeList)):
+      timeList[i] = str(timeList[i])
+
       if timeList[i].replace('.',"1").isnumeric() == True:
         if int(float(timeList[i])) <= 0 and int(float(timeList[i])) >= clip.duration:
           clip = None
-        else:
-          for i in range(len(timeList)):
-            timeList[i] = int(float(timeList[i]))
-          timeList.insert(0, 0)
-          timeList.append(clip.duration)
-          if sorted(timeList) != timeList:
-            clip = None
+          nombresValides=False
       else: clip = None
     
+    if nombresValides == True:
+      for i in range(len(timeList)):
+        timeList[i] = int(float(timeList[i]))
+      timeList.insert(0, 0)
+      timeList.append(clip.duration)
+      if sorted(timeList) != timeList:
+        clip = None
+
     if clip == None:
       self.editText("Error!\nPlease select an option!")
     else:
